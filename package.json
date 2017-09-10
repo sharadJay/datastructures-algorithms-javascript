@@ -1,0 +1,18 @@
+{
+  "name": "js-datastructures",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "shjain",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^20.0.4"
+  },
+  "dependencies": {
+    "mocha": "^3.5.0",
+    "should": "^13.0.1"
+  }
+}
