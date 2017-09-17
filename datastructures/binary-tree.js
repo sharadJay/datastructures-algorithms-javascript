@@ -167,6 +167,12 @@ BinaryTree.prototype.deleteNodeRef = function (currentNode, parentNode) {
     }
 }
 
+BinaryTree.prototype.depthFirstSearch = function (callback, distance = 0) {
+    if (this.leftChild) this.leftChild.depthFirstSearch(callback, distance + 1);
+    if (this.rightChild) this.rightChild.depthFirstSearch(callback, distance + 1);
+    callback(this.value, distance);
+}
+
 
 var root = new BinaryTree(4);
 root.insert(2);
