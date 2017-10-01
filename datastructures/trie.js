@@ -82,3 +82,44 @@ dictionary.addWord("shard");
 console.log(dictionary.search("sharad"));
 console.log(dictionary.search("shari"));
 console.log(dictionary.startsWith("shardi"));
+
+
+//Given a 2D board and a list of words from the dictionary, find all words in the board.
+//
+//    Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+//
+//    For example,
+//    Given words = ["oath","pea","eat","rain"] and board =
+//
+//    [
+//        ['o','a','a','n'],
+//        ['e','t','a','e'],
+//        ['i','h','k','r'],
+//        ['i','f','l','v']
+//    ]
+//Return ["eat","oath"].
+
+// Solution
+// Feed words to create a trie
+// now with each char in matrix
+// if that word exists in dictionary
+// mark it visited
+//  go in vertical back - forward
+//  go horizontal back -forward
+// until
+// 1. Position is outside matrix
+// 2. If char is visited
+
+function findWordsInBoard(words, board) {
+    let trie = new Trie();
+    words.forEach(word => trie.addWord(word));
+    let height = board.length;
+    let breadth = board[0].length;
+    for (var i = 0; i < height; i++) {
+        for (var j = 0; j < breadth; j++) {
+            traverseMatrix(trie,board,i,j,result);
+        }
+    }
+    //returns array of found words
+}
+
