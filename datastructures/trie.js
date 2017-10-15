@@ -75,18 +75,19 @@ Trie.prototype.startsWith = function (prefix) {
 }
 
 
-let dictionary = new Trie();
-dictionary.addWord("sharad");
-dictionary.addWord("shar");
-dictionary.addWord("shard");
-console.log(dictionary.search("sharad"));
-console.log(dictionary.search("shari"));
-console.log(dictionary.startsWith("shardi"));
+// let dictionary = new Trie();
+// dictionary.addWord("sharad");
+// dictionary.addWord("shar");
+// dictionary.addWord("shard");
+// console.log(dictionary.search("sharad"));
+// console.log(dictionary.search("shari"));
+// console.log(dictionary.startsWith("shardi"));
 
 
 //Given a 2D board and a list of words from the dictionary, find all words in the board.
 //
-//    Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+//    Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells
+// are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
 //
 //    For example,
 //    Given words = ["oath","pea","eat","rain"] and board =
@@ -111,15 +112,51 @@ console.log(dictionary.startsWith("shardi"));
 // 2. If char is visited
 
 function findWordsInBoard(words, board) {
+    //create a trie
     let trie = new Trie();
     words.forEach(word => trie.addWord(word));
+    //traverse words
     let height = board.length;
     let breadth = board[0].length;
+    let result = [];
     for (var i = 0; i < height; i++) {
         for (var j = 0; j < breadth; j++) {
-            traverseMatrix(trie,board,i,j,result);
+            traverseMatrix(trie.root, board, i, j, result);
         }
     }
-    //returns array of found words
+    return result;
 }
 
+var traverseMatrix = function (trie, board, i, j, result, currentString = "", usedPositions = []) {
+    if (i > board.length - 1 || j > board[0].length - 1 || i < 0 || j < 0) return;
+    if (usedPositions.indexOf("i" + i + "," + "j" + j) > -1) return
+    let currentChar = board[i][j];
+    if (trie.containsKey(currentChar)) {
+        let currentTrieRoot = trie.get(currentChar);
+        if (currentTrieRoot.isEnd()) {
+            if (result.indexOf(currentString + currentChar) <= -1) {
+                result.push(currentString + currentChar);
+            }
+        }
+        traverseMatrix(currentTrieRoot, board, i + 1, j, result, currentString + currentChar, usedPositions.concat(["i" + i + "," + "j" + j]));
+        traverseMatrix(currentTrieRoot, board, i, j + 1, result, currentString + currentChar, usedPositions.concat(["i" + i + "," + "j" + j]));
+        traverseMatrix(currentTrieRoot, board, i - 1, j, result, currentString + currentChar, usedPositions.concat(["i" + i + "," + "j" + j]));
+        traverseMatrix(currentTrieRoot, board, i, j - 1, result, currentString + currentChar, usedPositions.concat(["i" + i + "," + "j" + j]));
+    }
+}
+
+// let words = ["oath", "pea", "eat", "rain", "flv"];
+// let board =
+//     [
+//         ['o', 'a', 'a', 'n'],
+//         ['e', 't', 'a', 'e'],
+//         ['i', 'h', 'k', 'r'],
+//         ['i', 'f', 'l', 'v']
+//     ]
+//console.log(findWordsInBoard(["aaa"], [["a", "a"]]));
+
+let board = [["a", "b", "c"], ["a", "e", "d"], ["a", "f", "g"]]
+let words = ["eaabcdgfa"]
+
+let result = findWordsInBoard(words, board);
+console.log(result);
