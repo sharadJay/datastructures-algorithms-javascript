@@ -173,18 +173,50 @@ BinaryTree.prototype.depthFirstSearch = function (callback, distance = 0) {
     callback(this.value, distance);
 }
 
+BinaryTree.prototype.breadthFirstSearch = function () {
+    let nodeQueue = [this];
+    while (nodeQueue.length > 0) {
+        console.log("current");
+        console.log(nodeQueue);
+        let currentNode = nodeQueue.shift();
+        // console.log(currentNode.value);
+        if (currentNode.leftChild) nodeQueue.push(currentNode.leftChild);
+        if (currentNode.rightChild) nodeQueue.push(currentNode.rightChild);
+    }
+}
+var levelOrder = function (root) {
+    var traverseAndPopulateResults = function (root, depth) {
+        if (root === null) return;
+        if (results[depth]) {
+            results[depth].push(root.val)
+        } else {
+            results[depth] = [root.val]
+        }
+        if (root.left) traverseAndPopulateResults(root.left, depth + 1)
+        if (root.right) traverseAndPopulateResults(root.right, depth + 1)
+    }
+    var results = [];
+    if (root === null) return [];
+    if (root.right === null && root.left === null) return [[root.val]];
+    traverseAndPopulateResults(root, 0);
+    return results;
+};
+
+
 
 var root = new BinaryTree(4);
 root.insert(2);
 root.insert(7);
 root.insert(21);
 root.insert(1);
-console.log(root.contains(1));
-console.log(root.contains(21));
-console.log("In order");
-root.traverseInOrder();
-console.log("Pre order");
-root.traversePreOrder();
-console.log("Post order");
-root.traversePostOrder();
+// console.log(root.contains(1));
+// console.log(root.contains(21));
+// console.log("In order");
+// root.traverseInOrder();
+// console.log("Pre order");
+// root.traversePreOrder();
+// console.log("Post order");
+//root.traversePostOrder();
+root.breadthFirstSearch();
+// root.depthFirstSearch((value, distance) => console.log("DFS", value, distance));
 

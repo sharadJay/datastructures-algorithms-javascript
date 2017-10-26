@@ -12,6 +12,10 @@ TrieNode.prototype.containsKey = function (ch) {
     return this.links[ch] ? true : false;
 }
 
+TrieNode.prototype.getNumberOfChildren = function () {
+    return Object.keys(this.links).length;
+}
+
 TrieNode.prototype.get = function (ch) {
     return this.links[ch];
 }
@@ -23,8 +27,8 @@ TrieNode.prototype.put = function (ch, node) {
 TrieNode.prototype.isEnd = function () {
     return this.isEndOfWord;
 }
-TrieNode.prototype.setIsEnd = function () {
-    this.isEndOfWord = true;
+TrieNode.prototype.setIsEnd = function (value = true) {
+    this.isEndOfWord = value;
 }
 
 function Trie() {
@@ -74,14 +78,42 @@ Trie.prototype.startsWith = function (prefix) {
     return true;
 }
 
+Trie.prototype.deleteWord = function (word) {
+    if (word.length === 0) return this;
+    let currentNode = this.root;
+    let lastWordNode = this.root;
+    let lastChar = word[0];
+    for (let trieCounter = 0; trieCounter<word.length; trieCounter++) {
+        let currentChar = word[trieCounter];
+        if (currentNode.containsKey(currentChar)) {
+            currentNode = currentNode.get(currentChar);
+            if (currentNode.isEnd()) {
+                if (trieCounter < word.length - 1) {
+                    lastWordNode = currentNode;
+                    lastChar = word[trieCounter+1];
+                }
+            }
+        } else {
+            return this;
+        }
+    }
+    if (currentNode.isEnd()) currentNode.setIsEnd(false);
+    if (currentNode.getNumberOfChildren() === 0) {
+        delete lastWordNode[lastChar];
+    }
+    return this;
+}
 
+module.exports = Trie;
+
+//
 // let dictionary = new Trie();
 // dictionary.addWord("sharad");
 // dictionary.addWord("shar");
 // dictionary.addWord("shard");
-// console.log(dictionary.search("sharad"));
-// console.log(dictionary.search("shari"));
-// console.log(dictionary.startsWith("shardi"));
+// dictionary.deleteWord("shari");
+// console.log(dictionary.search("shari"))
+// console.log(dictionary.search("sharad"))
 
 
 //Given a 2D board and a list of words from the dictionary, find all words in the board.
