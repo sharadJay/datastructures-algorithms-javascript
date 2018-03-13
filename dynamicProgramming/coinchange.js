@@ -1,4 +1,7 @@
-// You are given coins of different denominations and a total amount of money amount. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+// https://leetcode.com/problems/coin-change/description/
+// You are given coins of different denominations and a total amount of money amount. Write a function to compute
+// the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by
+// any combination of the coins, return -1.
 //
 // Example 1:
 // coins = [1, 2, 5], amount = 11
@@ -11,41 +14,33 @@
 // Note:
 // You may assume that you have an infinite number of each kind of coin.
 
-
+/**
+ * @param {number[]} coins
+ * @param {number} amount
+ * @return {number}
+ */
 function getChange(coins, total) {
-  if (total === 0) return "Zero coins needed";
-  var coinPlacementArr = [Infinity];
-  var combinationArray = [0];
-  for (let coinCounter = 0; coinCounter <= coins.length; coinCounter++) {
-    let currentCoinValue = coins[coinCounter];
-    for (let amountCounter = currentCoinValue; amountCounter < total + 1; amountCounter++) {
-      let currentCombiValue = combinationArray[amountCounter] || Infinity;
-      let denominition = combinationArray[amountCounter - currentCoinValue] + 1 || Infinity;
-      let supposedCoinCount = denominition;
-      if (currentCombiValue > supposedCoinCount) {
-        coinPlacementArr[amountCounter] = coinCounter;
-        combinationArray[amountCounter] = supposedCoinCount;
-      }
+    if (!Array.isArray(coins) || coins.length == 0 || Number.isNaN(total)) return -1;
+    if (total == 0) return 0;
+    let numberOfCoinsArray = [].fill.call({length: total + 1}, Infinity);
+    numberOfCoinsArray[0] = 0;
+    let coinPlacementArray = [].fill.call({length: total + 1}, -1);
+    for (let coinCounter = 0; coinCounter < coins.length; coinCounter++) {
+        for (let totalCounter = 1; totalCounter <= total; totalCounter++) {
+            if (coins[coinCounter] > totalCounter) continue;// do nothing
+            if (numberOfCoinsArray[totalCounter] > (1 + numberOfCoinsArray[totalCounter - coins[coinCounter]])) {
+                numberOfCoinsArray[totalCounter] = 1 + numberOfCoinsArray[totalCounter - coins[coinCounter]];
+                coinPlacementArray[totalCounter] = coinCounter;
+            }
+        }
     }
-  }
-  console.log(combinationArray, coinPlacementArr);
-  console.log(printChangeCoins(coins, coinPlacementArr, total));
+    return numberOfCoinsArray[total] == Infinity ? -1 : numberOfCoinsArray[total];
 }
 
 // let coins = [2, 4]
 // getChange(coins, 10);
-getChange([1], 1);
+console.log(getChange([2, 4], 10));
 
-function printChangeCoins(coinsArr, coinPositionArr, total) {
-  if (!coinPositionArr[total])
-    return "No coins found for the total";
-  let currentAmount = total;
-  let counter = total;
-  let finalCoins = [];
-  while (currentAmount > 0) {
-    let coin = coinsArr[coinPositionArr[currentAmount]];
-    finalCoins.push(coin);
-    currentAmount = currentAmount - coin;
-  }
-  return finalCoins;
-}
+// 0  1  2  3  4  5  6  7  8  9  10
+// 2 -1  1 -1  2 -1  3 -1  4  -1  5
+// 4 -1 -1 -1  1 -1  2 -1  2  -1  3

@@ -1,9 +1,4 @@
-function factorial(number) {
-  if(number === 1)
-    return 1;
-  else if(number === 0)
-    return 0;
-  return number * factorial(number - 1);
+function factorial(tillNumber){
+  if(tillNumber==1) return 1;
+  return tillNumber*factorial(tillNumber-1);
 }
-
-module.exports = factorial;

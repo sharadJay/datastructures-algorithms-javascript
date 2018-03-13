@@ -1,87 +1,93 @@
-//minimum heap
-// 1. Parent node is lower than the child nodes
-
-function MinHeap() {
+let MinHeap = function () {
     this.storage = [];
 }
+
 //helper functions
-MinHeap.prototype.getLeftChildIndex = function (parentIndex) {
-    return 2 * parentIndex + 1;
+let getLeftChildIndex = n => 2 * n + 1;
+let getRightChildIndex = n => 2 * n + 2;
+let getParentIndex = n => Math.floor((n - 1) / 2);
+MinHeap.prototype.swap = function (i, j) {
+    [this.storage[i], this.storage[j]] = [this.storage[j], this.storage[i]];
 }
 
-MinHeap.prototype.getRightChildIndex = function (parentIndex) {
-    return 2 * parentIndex + 2;
+MinHeap.prototype.getLeftChild = function (parentIndex) {
+    return this.storage[getLeftChildIndex(parentIndex)];
 }
 
-MinHeap.prototype.getParentIndex = function (childNode) {
-    return Math.floor((childNode - 1) / 2);
+MinHeap.prototype.getSize = function () {
+    return this.storage.length;
+}
+
+MinHeap.prototype.getRightChild = function (parentIndex) {
+    return this.storage[getRightChildIndex(parentIndex)];
+}
+
+MinHeap.prototype.getParent = function (childIndex) {
+    return this.storage[getParentIndex(childIndex)];
 }
 
 MinHeap.prototype.hasLeftChild = function (parentIndex) {
-    return this.getLeftChildIndex(parentIndex) <= this.storage.length;
+    return getLeftChildIndex(parentIndex) < this.getSize();
 }
 
 MinHeap.prototype.hasRightChild = function (parentIndex) {
-    return this.getRightChildIndex(parentIndex) <= this.storage.length;
+    return getRightChildIndex(parentIndex) < this.getSize();
 }
 
-MinHeap.prototype.hasParent = function (childIndex) {
-    return this.getParentIndex(childIndex) >= 0;
+MinHeap.prototype.hasParent = function (childNode) {
+    return getParentIndex(childNode) > -1;
 }
 
-// peek minimum element
-MinHeap.prototype.peekMin = function () {
-    return this.storage.length>=0 ? this.storage[0] : "Heap is empty";
-}
-
-MinHeap.prototype.extractMin = function () {
-    switch (this.storage.length) {
-        case 0:
-            return "Heap is empty";
-        case 1:
-            return this.storage.unshift();
-        default:
-            [this.storage[0],this.storage[this.storage.length - 1]] = [this.storage[this.storage.length - 1], this.storage[0]];
-            const minimumElement = this.storage.pop();
-            this.heapifyDown(0);
-            return minimumElement
+MinHeap.prototype.heapifyUp = function () {
+    let index = this.getSize() - 1;
+    while (this.hasParent(index) && this.getParent(index) > this.storage[index]) {
+        this.swap(index, getParentIndex(index));
+        index = getParentIndex(index);
     }
 }
 
-MinHeap.prototype.heapifyDown = function (startIndex) {
-    if (this.hasLeftChild(startIndex)) {
-        let minOfChildren = this.getLeftChildIndex(startIndex);
-        if (this.hasRightChild(startIndex) && this.storage[this.getRightChildIndex(startIndex)] < this.storage[minOfChildren]) {
-            minOfChildren = this.getRightChildIndex(startIndex);
+MinHeap.prototype.heapifyDown = function () {
+    let index = 0;
+    while (this.hasLeftChild(index)) {
+        let smallestNumberIndex = getLeftChildIndex(index);
+        if (this.hasRightChild(index) && this.getRightChild(index) < this.storage[smallestNumberIndex]) {
+            smallestNumberIndex = getRightChildIndex(index);
         }
-        if (this.storage[startIndex] > this.storage[minOfChildren]) {
-            [this.storage[startIndex],this.storage[minOfChildren]] = [this.storage[minOfChildren], this.storage[startIndex]];
-            this.heapifyDown(minOfChildren);
-        }
+        this.swap(index, smallestNumberIndex);
+        index = smallestNumberIndex;
     }
 }
 
-MinHeap.prototype.heapifyUp = function (startIndex) {
-    if (this.hasParent(startIndex)) {
-        let parentNode = this.getParentIndex(startIndex);
-        if (this.storage[parentNode] > this.storage[startIndex]) {
-            [this.storage[parentNode],this.storage[startIndex]]=[this.storage[startIndex], this.storage[parentNode]];
-            this.heapifyUp(parentNode);
-        }
-    }
+MinHeap.prototype.add = function (item) {
+    this.storage.push(item);
+    this.heapifyUp();
 }
 
-MinHeap.prototype.add = function (element) {
-    this.storage.push(element);
-    this.heapifyUp(this.storage.length - 1);
+MinHeap.prototype.remove = function () {
+    this.swap(0, this.getSize() - 1);
+    let smallestNumber = this.storage.pop();
+    this.heapifyDown()
+    return smallestNumber;
+}
+
+MinHeap.prototype.getStorage = function () {
+    return this.storage.toString();
+}
+
+MinHeap.prototype.peek = function () {
+    return this.storage[0];
 }
 
 
 let heap = new MinHeap();
 heap.add(2);
+heap.add(4);
+heap.add(8);
+heap.add(12);
 heap.add(3);
+heap.add(1);
 heap.add(0);
-heap.add(-2);
-heap.extractMin();
-heap.extractMin();
-console.log(heap.peekMin());
+console.log(heap.getStorage(), "should be 0,3,1,12,4,8,2");
+heap.remove();
+console.log(heap.getStorage(), "should be 1,3,8,12,4,2");
+console.log(heap.peek(),"should be 1");

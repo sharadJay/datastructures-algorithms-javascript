@@ -36,5 +36,5 @@ function binarySearch(arr, num, start, end) {
     return num > arr[mid] ? binarySearch(arr, num, mid + 1, end) : binarySearch(arr, num, start, mid - 1);
 }
 
-const arr = [9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 8];
-console.log(findNumberInRotatedArray(arr, 2));
+const arr = [3,1];
+console.log(findNumberInRotatedArray(arr, 3));

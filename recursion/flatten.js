@@ -1,13 +1,11 @@
-function flattenArray(actualArr) {
-    var flattenedArray = [];
-    for (var i = 0; i < actualArr.length; i++) {
-        if (Array.isArray(actualArr[i])) {
-            flattenedArray = flattenedArray.concat(flattenArray(actualArr[i]));
-        }
-        else {
-            flattenedArray.push(actualArr[i]);
-        }
-    }
-    return flattenedArray;
+/*
+Implement a function that flattens a nested array.
+flatten([1,[2],[3, [[4]]]]);
+=> [1,2,3,4]
+*/
+
+function flatten(arr) {
+    return arr.reduce((flat, toFlatten) => flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten), [])
 }
-module.exports = flattenArray;
+
+console.log(flatten([1, [2], [3, [[4]]]]));

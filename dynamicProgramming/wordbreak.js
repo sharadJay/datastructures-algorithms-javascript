@@ -36,21 +36,21 @@
 //     return false;
 // }
 
-var wordBreak = function (s, wordDict, wordStart = 0) {
-    if(s.length===wordStart) return true;
-    if (s.length === 0 || wordDict.length === 0) return false;
-    for (let endOfWordCounter = s.length; endOfWordCounter > wordStart; endOfWordCounter--) {
-        let currentWord = s.slice(wordStart, endOfWordCounter);
-        if (wordDict.indexOf(currentWord) > -1) {
-            //let newWordDict = wordDict.filter(item => item !== currentWord)
-            if (wordBreak(s, wordDict, endOfWordCounter)) {
-                return true;
+var wordBreak = function (s, wordDict) {
+    if (s.length == 0) return true;
+    if (s.length > 0 && wordDict.length == 0) return false;
+    let hasFound = [true];
+    for(let i=1;i<=s.length;i++){
+        for(let j=0;j<i;j++){
+            if(hasFound[j] && wordDict.includes(s.substring(j,i))){
+                hasFound[i] = true;
+                break;
             }
         }
     }
-    return false;
+    return hasFound[s.length] === true;
 }
 
 let s = "aaaaaaal"
 let dict = ["aaaa", "aaa"]
-console.log(wordBreak("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",["a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"]));
+console.log(wordBreak("abcd",["a","abc","b","cd"]));

@@ -13,22 +13,17 @@
  * @return {number}
  */
 var lengthOfLIS = function (nums) {
-    if (nums.length === 1) return 1;
-    if (nums.length === 0) return 0;
-    let LISarr = new Array(nums.length);// default value will be one here
+    if (!Array.isArray(nums) || nums.length == 0) return 0;
+    if (nums.length == 1) return 1;
+    let LISArray = Array(nums.length).fill(1);
     for (let i = 1; i < nums.length; i++) {
         for (let j = 0; j < i; j++) {
             if (nums[j] < nums[i]) {
-                let smallerNumberLIS = LISarr[j] || 1;
-                let currentILis = LISarr[i] || 1;
-                LISarr[i] = Math.max(currentILis, smallerNumberLIS + 1);
+                LISArray[i] = Math.max(LISArray[j] + 1, LISArray[j]);
             }
         }
     }
-    return LISarr.reduce(function (accumulator, currentValue) {
-        currentValue = currentValue || 1;
-        return currentValue > accumulator ? currentValue : accumulator;
-    }, 1);
+    return LISArray.reduce((acc, curr) => acc > curr ? acc : curr, 1);
 };
 
-console.log(lengthOfLIS([2,2]))
+console.log(lengthOfLIS([1,3,6,7,9,4,10,5,6]))

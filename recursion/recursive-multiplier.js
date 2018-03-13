@@ -1,4 +1,7 @@
 function multiplier(arr, multiNumber) {
+    if (!Array.isArray(arr)) return;
+    if (multiNumber == 1) return arr;
+
     function multiplierArray(arr, pos) {
         if (pos === arr.length) {
             return arr;

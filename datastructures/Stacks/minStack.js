@@ -1,4 +1,4 @@
-var Stack = require("./stackObject")
+var Stack = require("./stack")
 
 function MinStack() {
     this.stack = new Stack();
